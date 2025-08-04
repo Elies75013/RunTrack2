@@ -1,0 +1,48 @@
+<?php
+// Connexion à la base de données
+$servername = "localhost";
+$username = "root";       // À modifier si nécessaire
+$password = "";           // À modifier si nécessaire
+$dbname = "jour09";
+
+// Créer la connexion
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Vérifier la connexion
+if ($conn->connect_error) {
+    die("Connexion échouée : " . $conn->connect_error);
+}
+
+// Requête SQL : récupérer nom et capacité des salles
+$sql = "SELECT nom, capacite FROM salles";
+$result = $conn->query($sql);
+
+// Affichage du tableau HTML
+if ($result->num_rows > 0) {
+    echo "<table border='1'>";
+    echo "<thead><tr>";
+
+    // Affichage des en-têtes de colonnes
+    while ($fieldinfo = $result->fetch_field()) {
+        echo "<th>" . htmlspecialchars($fieldinfo->name) . "</th>";
+    }
+
+    echo "</tr></thead><tbody>";
+
+    // Affichage des données
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        foreach ($row as $cell) {
+            echo "<td>" . htmlspecialchars($cell) . "</td>";
+        }
+        echo "</tr>";
+    }
+
+    echo "</tbody></table>";
+} else {
+    echo "Aucune salle trouvée.";
+}
+
+// Fermer la connexion
+$conn->close();
+?>
